@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Cobra: El Imperio de los 100 Queques</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --panel-bg: #111827;
+            --border-color: #1f2937;
+            --accent: #f59e0b;
+            --accent-glow: rgba(245, 158, 11, 0.4);
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --success: #10b981;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin: 0 0 5px 0;
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .main-layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            max-width: 900px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .column {
+            flex: 1;
+            min-width: 280px;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .panel {
+            background-color: var(--panel-bg);
+            border-radius: 14px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            box-sizing: border-box;
+        }
+
+        .stats {
+            font-size: 1rem;
+            display: flex;
+            justify-content: space-around;
+            background: #1f2937;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        /* Stream / Cobra Panel */
+        .cobra-box {
+            background: linear-gradient(135deg, #1f1f1f, #2a1a08);
+            border: 2px solid var(--accent);
+            text-align: center;
+        }
+
+        .cobra-title {
+            font-size: 0.85rem;
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .viewers-badge {
+            background: #ef4444;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+        }
+
+        #cobraDialogo {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #e5e7eb;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+        }
+
+        /* Hype Bar */
+        .hype-container {
+            background: #374151;
+            border-radius: 8px;
+            height: 10px;
+            width: 100%;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .hype-fill {
+            background: linear-gradient(90deg, #f59e0b, #ef4444);
+            height: 100%;
+            width: 0%;
+            transition: width 0.2s;
+        }
+
+        /* Clicker Section */
+        .clicker-box {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 25px 15px;
+        }
+
+        #quequeBtn {
+            background: radial-gradient(circle, #f59e0b 0%, #b45309 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 130px;
+            height: 130px;
+            font-size: 3.5rem;
+            cursor: pointer;
+            box-shadow: 0 0 20px var(--accent-glow);
+            transition: transform 0.08s, box-shadow 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #quequeBtn:active {
+            transform: scale(0.92);
+            box-shadow: 0 0 5px var(--accent-glow);
+        }
+
+        .current-queque-info {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .current-queque-name {
+            font-weight: bold;
+            color: var(--accent);
+            font-size: 1.05rem;
+        }
+
+        /* Shop & Upgrades */
+        .shop-title {
+            font-size: 1rem;
+            margin-top: 0;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
+            color: #38bdf8;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .upgrade-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1f2937;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            border: 1px solid #374151;
+        }
+
+        .upgrade-info {
+            font-size: 0.85rem;
+        }
+
+        .upgrade-info span {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .buy-btn {
+            background-color: var(--success);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+        }
+
+        .buy-btn:hover:not(:disabled) {
+            background-color: #059669;
+        }
+
+        .buy-btn:disabled {
+            background-color: #374151;
+            color: #6b7280;
+            cursor: not-allowed;
+        }
+
+        /* Chat Simulado */
+        .chat-box {
+            height: 140px;
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 8px;
+            overflow-y: auto;
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            border: 1px solid #1e293b;
+        }
+
+        .chat-msg span {
+            font-weight: bold;
+            color: #60a5fa;
+        }
+
+        /* Controles de Partida */
+        .game-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .control-btn {
+            flex: 1;
+            background: #374151;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .control-btn:hover {
+            background: #4b5563;
+        }
+
+        /* Modal / Alertas */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            background: #10b981;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🍰 La Cobra: Imperio de los 100 Queques 🐍</h1>
+    </header>
+
+    <div class="main-layout">
+        <!-- Columna Izquierda: Stream & Clicker -->
+        <div class="column">
+            <div class="panel stats">
+                <div>Dinero: <span id="dineroDisplay">$0</span></div>
+                <div>Pasivo: <span id="pasivoDisplay">$0/s</span></div>
+            </div>
+
+            <!-- Panel de La Cobra -->
+            <div class="panel cobra-box">
+                <div class="cobra-title">
+                    <span>🔴 EN DIRECTO CON LA COBRA</span>
+                    <span class="viewers-badge" id="viewersCount">👁️ 45.2K</span>
+                </div>
+                <div id="cobraDialogo">"¡Ey! Arrancamos el stream. ¡Mandale mecha a esos queques a ver si comemos algo decente!"</div>
+                <div class="hype-container">
+                    <div class="hype-fill" id="hypeFill"></div>
+                </div>
+            </div>
+
+            <!-- Botón Principal -->
+            <div class="panel clicker-box">
+                <button id="quequeBtn" onclick="hornearQueque()">🎂</button>
+                <div class="current-queque-info">
+                    Queque Actual: <span class="current-queque-name" id="nombreQuequeUI">Queque Quemado de Cartón</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Columna Derecha: Tienda y Chat -->
+        <div class="column">
+            <!-- Panel de Tienda / Desbloqueo de Queques -->
+            <div class="panel">
+                <div class="shop-title">
+                    <span>Producir Siguiente Queque</span>
+                    <span id="nivelQuequeUI">Nivel 1/100</span>
+                </div>
+                
+                <div class="upgrade-item">
+                    <div class="upgrade-info">
+                        <strong id="siguienteNombre">Queque Duro de Ayer</strong>
+                        <span id="siguienteCosto">Costo: $50</span>
+                    </div>
+                    <button class="buy-btn" id="btnSiguiente" onclick="subirNivelQueque()">Desbloquear</button>
+                </div>
+
+                <div style="margin-top: 10px; font-size: 0.8rem; color: var(--text-muted);" id="descripcionQueque">
+                    Un verdadero atentado culinario. Nadie en su sano juicio pagaría por esto.
+                </div>
+            </div>
+
+            <!-- Panel de Mejoras Pasivas -->
+            <div class="panel">
+                <div class="shop-title">Mejoras de Stream</div>
+                
+                <div class="upgrade-item">
+                    <div class="upgrade-info">
+                        <strong>Receta Mejorada (Clicks)</strong>
+                        <span id="costoMejoraClick">Costo: $15</span>
+                    </div>
+                    <button class="buy-btn" id="btnMejoraClick" onclick="comprarMejoraClick()">Comprar</button>
+                </div>
+
+                <div class="upgrade-item">
+                    <div class="upgrade-info">
+                        <strong>Horno Automático de Stream</strong>
+                        <span id="costoMejoraHorno">Costo: $100</span>
+                    </div>
+                    <button class="buy-btn" id="btnMejoraHorno" onclick="comprarMejoraHorno()">Comprar</button>
+                </div>
+            </div>
+
+            <!-- Chat Simulado -->
+            <div class="panel" style="padding: 10px;">
+                <div style="font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; color: var(--text-muted);">Chat de Twitch</div>
+                <div class="chat-box" id="chatBox">
+                    <div class="chat-msg"><span>PeladoStreamer:</span> Jajaja qué es eso LPM</div>
+                    <div class="chat-msg"><span>Carp_99:</span> ANULAMOS MUFAAA</div>
+                    <div class="chat-msg"><span>Juliancito:</span> Saludos desde Córdoba rey</div>
+                </div>
+                <div class="game-controls">
+                    <button class="control-btn" onclick="exportarPartida()">Exportar Partida</button>
+                    <button class="control-btn" onclick="importarPartida()">Importar Partida</button>
+                    <button class="control-btn" style="background:#ef4444;" onclick="reiniciarPartida()">Reiniciar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toastNotif">¡Partida guardada con éxito!</div>
+
+    <script>
+        // Array completo de los 100 Queques ordenados del peor al mejor
+        const listaQueques = [
+            { id: 1, nombre: "Queque Quemado de Cartón", desc: "Un atentado culinario absoluto.", valor: 1, costo: 0 },
+            { id: 2, nombre: "Queque con Sabor a Detergente", desc: "Alguien lavó mal el bol.", valor: 2, costo: 50 },
+            { id: 3, nombre: "Queque Seco de la Despensa", desc: "Te saca hasta la última gota de saliva.", valor: 4, costo: 120 },
+            { id: 4, nombre: "Queque con Hormigas", desc: "Extra de proteína no deseada.", valor: 7, costo: 250 },
+            { id: 5, nombre: "Queque Crudo por Dentro", desc: "Una masa líquida sospechosa.", valor: 11, costo: 450 },
+            { id: 6, nombre: "Queque Salado por Error", desc: "Le pusiste sal fina en vez de azúcar.", valor: 16, costo: 800 },
+            { id: 7, nombre: "Queque de Soja Rancia", desc: "Saludable pero deprimente.", valor: 22, hostname: "", costo: 1300 },
+            { id: 8, nombre: "Queque Aplastado en la Mochila", desc: "Llegó hecho una pelota triste.", valor: 30, costo: 2000 },
+            { id: 9, nombre: "Queque Gris de Microondas", desc: "Textura de goma de borrar.", valor: 40, costo: 3000 },
+            { id: 10, nombre: "Queque de Pan Duro", desc: "Aprovechando las obras de la semana pasada.", valor: 55, costo: 4500 },
+            { id: 11, nombre: "Queque Tibio de Kiosco", desc: "Lleva tres meses en vidriera.", valor: 75, costo: 6500 },
+            { id: 12, nombre: "Queque con Pelo Desconocido", desc: "Esperemos que sea de la mascota.", valor: 100, costo: 9500 },
+            { id: 13, nombre: "Queque Humedecido por la Lluvia", desc: "Se cayó camino al estudio.", valor: 135, costo: 14000 },
+            { id: 14, nombre: "Queque de Vainilla Industrial", desc: "Sabor puro a químico artificial.", valor: 180, costo: 20000 },
+            { id: 15, nombre: "Queque con Exceso de Polvo de Hornear", desc: "Te deja la lengua entumecida.", valor: 240, costo: 28000 },
+            { id: 16, nombre: "Queque con Azúcar Impalpable Barata", desc: "Parece talco de farmacia.", valor: 320, costo: 38000 },
+            { id: 17, nombre: "Queque de Limón Ácido", desc: "Demasiado jugo de limón concentrado.", valor: 420, costo: 50000 },
+            { id: 18, nombre: "Queque Casero Aceptable", desc: "El primero que medio pasa.", valor: 550, costo: 68000 },
+            { id: 19, nombre: "Queque de Naranja Común", desc: "Clásico de domingo al mediodía.", valor: 720, costo: 90000 },
+            { id: 20, nombre: "Queque Marmolado Simple", desc: "Empieza a gustar un poquito en el chat.", valor: 950, costo: 120000 },
+            { id: 21, nombre: "Queque de Yogur de Frutilla", desc: "Esponjoso y agradable.", valor: 1250, costo: 160000 },
+            { id: 22, nombre: "Queque con Gotas de Chocolate", desc: "Tiene chispas que alegran la tarde.", valor: 1650, costo: 210000 },
+            { id: 23, nombre: "Queque de Banana Casero", desc: "Aroma rico a fruta madura.", valor: 2200, costo: 280000 },
+            { id: 24, nombre: "Queque Borracho con un toque de Licor", desc: "Para levantar la temperatura del stream.", valor: 2900, costo: 370000 },
+            { id: 25, nombre: "Queque Integral con Pasas", desc: "Saludable y rico.", valor: 3800, costo: 490000 },
+            { id: 26, nombre: "Queque de Manzana y Canela", desc: "Huele a panadería de barrio.", valor: 5000, costo: 640000 },
+            { id: 27, nombre: "Queque con Copitos de Dulce de Leche", desc: "Empieza la fiesta dulce.", valor: 6500, costo: 830000 },
+            { id: 28, nombre: "Queque Relleno de Mermelada", desc: "Sorpresa dulce al morder.", valor: 8500, costo: 1080000 },
+            { id: 29, nombre: "Queque con Cobertura de Azúcar Glas", desc: "Gatilla antojos en el chat.", valor: 11000, costo: 1400000 },
+            { id: 30, name: "Queque de Coco Rallado", desc: "Textura crocante muy copada.", valor: 14500, costo: 1800000 },
+            { id: 31, nombre: "Queque Esponjoso de Manteca", desc: "Se deshace solo en la boca.", valor: 19000, costo: 2300000 },
+            { id: 32, nombre: "Queque Bañado en Chocolate Suave", desc: "Capa fina pero sabrosa.", valor: 25000, costo: 3000000 },
+            { id: 33, nombre: "Queque de Nuez y Almendras", desc: "Toque crujiente gourmet.", valor: 33000, costo: 4000000 },
+            { id: 34, nombre: "Queque con Crema Chantilly", desc: "Copete blanco irresistible.", valor: 43000, costo: 5200000 },
+            { id: 35, nombre: "Queque Húmedo de Cacao", desc: "Sabor intenso a chocolate.", valor: 56000, costo: 6700000 },
+            { id: 36, nombre: "Queque de Café Expreso", desc: "Ideal para la merienda fuerte.", valor: 73000, costo: 8700000 },
+            { id: 37, nombre: "Queque con Frutos Rojos", desc: "Arándanos y frambuesas frescas.", valor: 95000, costo: 11300000 },
+            { id: 38, nombre: "Queque bañado en Baileys", desc: "Un toque picaronón para el streamer.", valor: 125000, costo: 14700000 },
+            { id: 39, nombre: "Queque Relleno de Crema Pastelera", desc: "Clásico de confitería fina.", valor: 165000, costo: 19000000 },
+            { id: 40, nombre: "Queque Artesanal de Autor", desc: "¡A La Cobra le empieza a gustar en serio!", valor: 220000, costo: 25000000 },
+            { id: 41, nombre: "Queque de Queso Estilo New York", desc: "Cremoso y de nivel superior.", valor: 290000, costo: 33000000 },
+            { id: 42, nombre: "Queque Selva Negra", desc: "Cerezas, crema y chocolate puro.", valor: 380000, costo: 43000000 },
+            { id: 43, nombre: "Queque Tiramisú", desc: "Café, mascarpone y bizcocho perfecto.", valor: 500000, costo: 56000000 },
+            { id: 44, nombre: "Queque de Maracuyá", desc: "Toque tropical ácido y dulce.", valor: 660000, costo: 73000000 },
+            { id: 45, nombre: "Queque Relleno de Nutella", desc: "El chat enloquece de antojo.", valor: 870000, costo: 95000000 },
+            { id: 46, nombre: "Queque Tres Leches Húmedo", desc: "Goteando dulzura por todos lados.", valor: 1150000, costo: 125000000 },
+            { id: 47, nombre: "Queque Red Velvet", desc: "Elegante color rojo aterciopelado.", valor: 1500000, costo: 165000000 },
+            { id: 48, nombre: "Queque Brownie Fudge", desc: "Denso, pesado y chocolatoso.", valor: 2000000, costo: 220000000 },
+            { id: 49, nombre: "Queque de Pistacho Fino", desc: "Exclusivo y de costo elevado.", valor: 2700000, costo: 295000000 },
+            { id: 50, nombre: "Queque Bañado en Dulce de Leche Colonial", desc: "Una montaña de dulce argentino.", valor: 3600000, costo: 390000000 },
+            { id: 51, nombre: "Queque de Chajá Tradicional", desc: "Merengue crujiente y durazno.", valor: 4800000, costo: 520000000 },
+            { id: 52, nombre: "Queque Relleno de Ganache de Dark Chocolate", desc: "Amargo y dulce a la perfección.", valor: 6400000, costo: 690000000 },
+            { id: 53, nombre: "Queque de Rogel Artesanal", desc: "Capas infinitas con merengue italiano.", valor: 8500000, costo: 920000000 },
+            { id: 54, nombre: "Queque Pavlova de Frutas", desc: "Delicadeza pura de repostería.", valor: 11300000, costo: 1220000000 },
+            { id: 55, nombre: "Queque de Caramelo Salado", desc: "Contraste de sabores épico.", valor: 15000000, costo: 1620000000 },
+            { id: 56, nombre: "Queque de Frutos Secos Caramelizados", desc: "Crocante supremo.", valor: 20000000, costo: 2150000000 },
+            { id: 57, nombre: "Queque Bombón Ferrero", desc: "Avellanas y chocolate belga.", valor: 27000000, costo: 2900000000 },
+            { id: 58, nombre: "Queque de Dulce de Leche y Nueces Pecán", desc: "Manjar de los dioses modernos.", valor: 36000000, costo: 3900000000 },
+            { id: 59, nombre: "Queque de Moka Imperial", desc: "Café suave con crema de manteca.", valor: 48000000, costo: 5200000000 },
+            { id: 60, nombre: "Queque Maestro Pastelero", desc: "¡A La Cobra le GUSTA MUCHO este nivel!", valor: 64000000, costo: 6900000000 },
+            { id: 61, nombre: "Queque de Manjar Blanco y Coco", desc: "Sabor exótico y refinado.", valor: 85000000, costo: 9200000000 },
+            { id: 62, nombre: "Queque Opera Francesa", desc: "Capas de almendra, café y ganache.", valor: 113000000, costo: 12200000000 },
+            { id: 63, nombre: "Queque Sacher de Viena", desc: "Bizcocho de chocolate con toque de albaricoque.", valor: 150000000, costo: 16200000000 },
+            { id: 64, nombre: "Queque Chocotorta Gigante", desc: "El orgullo nacional hecho queque.", valor: 200000000, costo: 21500000000 },
+            { id: 65, nombre: "Queque de Crema Irlandesa", desc: "Con un toque de whisky legendario.", valor: 270000000, costo: 29000000000 },
+            { id: 66, nombre: "Queque Ganache de Rubí Rosa", desc: "Chocolate de cacao rosa natural.", valor: 360000000, costo: 39000000000 },
+            { id: 67, nombre: "Queque Saint Honoré", desc: "Pequeños profiteroles caramelizados encima.", valor: 480000000, costo: 52000000000 },
+            { id: 68, nombre: "Queque Croquembouche Deluxe", desc: "Torre de delicias reposteras.", valor: 640000000, costo: 69000000000 },
+            { id: 69, nombre: "Queque de Marzipan Real", desc: "Pasta de almendras de alta alcurnia.", valor: 850000000, costo: 92000000000 },
+            { id: 70, nombre: "Queque de Fruta Confitada Imperial", desc: "Selección de la más alta calidad.", valor: 1130000000, costo: 122000000000 },
+            { id: 71, nombre: "Queque Mousse de Chocolate Blanco Belga", desc: "Suavidad celestial espumosa.", valor: 1500000000, costo: 162000000000 },
+            { id: 72, nombre: "Queque Glaseado de Espejo", desc: "Brilla tanto que refleja el estudio.", valor: 2000000000, costo: 215000000000 },
+            { id: 73, nombre: "Queque Crumble de Manzana Dorada", desc: "Crocante por fuera, tierno por dentro.", valor: 2700000000, costo: 290000000000 },
+            { id: 74, nombre: "Queque Soufflé de Limón Real", desc: "Se eleva como obra de arte.", valor: 3600000000, costo: 390000000000 },
+            { id: 75, nombre: "Queque Trufado al Champagne", desc: "Lujo total para celebrar subs.", valor: 4800000000, costo: 520000000000 },
+            { id: 76, nombre: "Queque de Dulce de Leche Artesanal Granizado", desc: "Tropezones de chocolate premium.", valor: 6400000000, costo: 690000000000 },
+            { id: 77, nombre: "Queque Relleno de Crema de Avellanas Pura", desc: "Calidad internacional indiscutible.", valor: 8500000000, costo: 920000000000 },
+            { id: 78, nombre: "Queque de Manjar de los Andes", desc: "Receta secreta de alta montaña.", valor: 11300000000, costo: 1220000000000 },
+            { id: 79, nombre: "Queque de Cacao Orgánico de Selva", desc: "Aroma puro y envolvente.", valor: 15000000000, costo: 1620000000000 },
+            { id: 80, nombre: "Queque Suprema Excelencia", desc: "¡A La Cobra le GUSTA MUUUUCHISIMO!", valor: 20000000000, costo: 2150000000000 },
+            { id: 81, nombre: "Queque Bañado en Manjar de Néctar", desc: "Una delicia absoluta.", valor: 27000000000, costo: 2900000000000 },
+            { id: 82, nombre: "Queque de Crema Diplomática y Frutos del Bosque", desc: "Sinfonía de sabores.", valor: 36000000000, costo: 3900000000000 },
+            { id: 83, nombre: "Queque Infundido en Esencia de Vainilla Bourbon", desc: "Aroma inigualable.", valor: 48000000000, costo: 5200000000000 },
+            { id: 84, nombre: "Queque Glaseado con Hojuelas de Almendra Tostada", desc: "Crocantes mágicos.", valor: 64000000000, costo: 6900000000000 },
+            { id: 85, nombre: "Queque Mousse de Chocolate Amargo 85%", desc: "Para verdaderos sibaritas.", valor: 85000000000, costo: 9200000000000 },
+            { id: 86, nombre: "Queque Relleno de Salsa de Frutos Rojos Silvestres", desc: "Ácido y dulce perfecto.", valor: 113000000000, costo: 12200000000000 },
+            { id: 87, nombre: "Queque con Baño de Espejo de Cacao Fino", desc: "Una obra maestra visual.", valor: 150000000000, costo: 16200000000000 },
+            { id: 88, nombre: "Queque de Crema de Pistacho de Bronte", desc: "Exclusividad siciliana pura.", valor: 200000000000, costo: 21500000000000 },
+            { id: 89, nombre: "Queque Imperial de Frutos Secos Glaseados", desc: "Cargado de lujo.", valor: 270000000000, costo: 29000000000000 },
+            { id: 90, nombre: "Queque de Trufa Negra y Cacao Suizo", desc: "Inmensamente costoso y delicioso.", valor: 360000000000, costo: 39000000000000 },
+            { id: 91, name: "Queque de Néctar de Flores Silvestres y Miel", desc: "Dulzura natural de otro planeta.", valor: 480000000000, costo: 52000000000000 },
+            { id: 92, nombre: "Queque Glaseado con Perlas de Azúcar Cristalizada", desc: "Brilla como un tesoro.", valor: 640000000000, costo: 69000000000000 },
+            { id: 93, nombre: "Queque Relleno de Crema de Macadamia Tostada", desc: "Sabor untuoso supremo.", valor: 850000000000, costo: 92000000000000 },
+            { id: 94, nombre: "Queque de Esencia de Rosas y Frutos Rojos", desc: "Aroma sofisticado de alta cocina.", valor: 1130000000000, costo: 122000000000000 },
+            { id: 95, nombre: "Queque Mousse de Chocolate Blanco con Corazón de Maracuyá", desc: "Contraste sublime.", valor: 1500000000000, costo: 162000000000000 },
+            { id: 96, nombre: "Queque Celestial de Almendras y Naranja Confitada", desc: "Sabor angelical.", valor: 2000000000000, costo: 215000000000000 },
+            { id: 97, nombre: "Queque Legendario de los Siete Cielos", desc: "Patrimonio cultural del stream.", valor: 2700000000000, costo: 290000000000000 },
+            { id: 98, nombre: "Queque Mítico Bañado en Polvo de Estrellas de Cacao", desc: "Cosmicamente delicioso.", valor: 3600000000000, costo: 390000000000000 },
+            { id: 99, nombre: "Queque Sagrado de los Dioses del Olimpo", desc: "Casi perfecto en cada bocado.", valor: 4800000000000, costo: 520000000000000 },
+            { id: 100, nombre: "Queque Divino Galáctico de Oro y Néctar", desc: "¡LO MEJOR QUE PROBÓ EN SU VIDA! ÉXTASIS TOTAL.", valor: 10000000000000, costo: 1000000000000000 }
+        ];
+
+        // Estado del Juego
+        let dinero = 0;
+        let nivelActualQueque = 0; // Índice 0 al 99
+        let dineroPorClick = 1;
+        let dineroPorSegundo = 0;
+
+        let costoMejoraClick = 15;
+        let costoMejoraHorno = 100;
+
+        let hype = 0;
+        let hypeActivo = false;
+
+        // Frases de La Cobra ordenadas por tramos exactos pedidos
+        function obtenerReaccionCobra(nivel) {
+            let tramo = nivel + 1; // 1 al 100
+            
+            if (tramo < 20) {
+                // Niveles 1 al 19: No le gusta / Asqueroso
+                const frases = [
+                    "¡Esto es intomable, pa! ¿Qué me diste, cartón mojado?",
+                    "¡Me querés envenenar con esta porquería, hermano!",
+                    "¡Por favor, tirá esto a la basura, nos desmonetizan el canal!",
+                    "¡Esto está más seco que rodilla de mormón!",
+                    "¡No me hagas esto en vivo, me da vergüenza ajena!"
+                ];
+                return frases[Math.floor(Math.random() * frases.length)];
+            } else if (tramo >= 20 && tramo < 40) {
+                // Niveles 20 al 39: Le gusta un poquito
+                const frases = [
+                    "Bueno... dentro de todo, este medio que pasa, che.",
+                    "Mirá, no es una locura, pero se deja comer con unos mates.",
+                    "Va queriendo, va queriendo... todavía le falta horno, pero pasa.",
+                    "Ahí me gustó un poquito más, no te voy a mentir.",
+                    "Zafa bastante, eh. Me comí cosas peores en la pensión."
+                ];
+                return frases[Math.floor(Math.random() * frases.length)];
+            } else if (tramo >= 40 && tramo < 60) {
+                // Niveles 40 al 59: Le gusta
+                const frases = [
+                    "¡Ey, este sí que me gusta! ¡Muy bueno, pa!",
+                    "¡Mejoró muchísimo la receta, hay futuro acá!",
+                    "¡Traeme otro trozo de estos, la verdad que está rico!",
+                    "¡Esto con un buen café negro entra como agua en el desierto!",
+                    "¡Bien ahí che, se nota que le pusiste ganas!"
+                ];
+                return frases[Math.floor(Math.random() * frases.length)];
+            } else if (tramo >= 60 && tramo < 80) {
+                // Niveles 60 al 79: Le gusta mucho
+                const frases = [
+                    "¡Uf, pa! ¡Me gusta MUCHO este queque, una locura total!",
+                    "¡Impresionante la textura, miren lo que es esto por favor!",
+                    "¡El chat está re loco pidiendo la receta de este bizcocho!",
+                    "¡Una exquisitez de nivel internacional, de verdad te lo digo!",
+                    "¡Esto ya es alta pastelería, hermano, aplausos!"
+                ];
+                return frases[Math.floor(Math.random() * frases.length)];
+            } else if (tramo >= 80 && tramo < 100) {
+                // Niveles 80 al 99: Le gusta muuuuchísimo
+                const frases = [
+                    "¡NO NO NO! ¡Esto me gusta MUUUUCHISIMO, es una animalada de rico!",
+                    "¡Me querés volver loco con este sabor! ¡Im-pre-sio-nan-te!",
+                    "¡Esto no es un queque, es una obra de arte culinaria mundial!",
+                    "¡Increíble, papá! ¡Se pasaron de nivel, qué manjar por Dios!",
+                    "¡El mejor lejos de la semana, estoy emocionado!"
+                ];
+                return frases[Math.floor(Math.random() * frases.length)];
+            } else {
+                // Nivel 100 exacto
+                return "¡LO MEJOR QUE PROBÓ EN SU VIDA! ¡ESTOY LLORANDO DE LA EMOCIÓN! ¡NO EXISTE ALGO IGUAL EN ESTE PLANETA, SOMOS HISTORIA PURA, PA!";
+            }
+        }
+
+        function hornearQueque() {
+            let q = listaQueques[nivelActualQueque];
+            let multiplicadorHype = hypeActivo ? 2 : 1;
+            dinero += q.valor * multiplicadorHype;
+
+            // Subir Hype por clicks
+            hype += 4;
+            if (hype >= 100) {
+                hype = 100;
+                if (!hypeActivo) activarHype();
+            }
+
+            // Reacción aleatoria de La Cobra al hacer click
+            if (Math.random() < 0.3) {
+                document.getElementById('cobraDialogo').innerText = `"${obtenerReaccionCobra(nivelActualQueque)}"`;
+            }
+
+            actualizarPantalla();
+        }
+
+        function activarHype() {
+            hypeActivo = true;
+            document.getElementById('cobraDialogo').innerText = `🔥 ¡MODO HYPE ACTIVO! ¡GANANCIAS X2 EN EL STREAM! 🔥`;
+            setTimeout(() => {
+                hypeActivo = false;
+                hype = 0;
+            }, 10000); // 10 segundos de Hype
+        }
+
+        function subirNivelQueque() {
+            if (nivelActualQueque < listaQueques.length - 1) {
+                let siguienteQ = listaQueques[nivelActualQueque + 1];
+                if (dinero >= siguienteQ.costo) {
+                    dinero -= siguienteQ.costo;
+                    nivelActualQueque++;
+                    
+                    let reaccion = obtenerReaccionCobra(nivelActualQueque);
+                    document.getElementById('cobraDialogo').innerText = `"${reaccion}"`;
+                    
+                    agregarMensajeChat("Sistema", `¡Se ha desbloqueado el nivel ${nivelActualQueque + 1}: ${siguienteQ.nombre}!`);
+                    actualizarPantalla();
+                }
+            }
+        }
+
+        function comprarMejoraClick() {
+            if (dinero >= costoMejoraClick) {
+                dinero -= costoMejoraClick;
+                dineroPorClick += 1;
+                costoMejoraClick = Math.floor(costoMejoraClick * 1.5);
+                actualizarPantalla();
+            }
+        }
+
+        function comprarMejoraHorno() {
+            if (dinero >= costoMejoraHorno) {
+                dinero -= costoMejoraHorno;
+                dineroPorSegundo += 2;
+                costoMejoraHorno = Math.floor(costoMejoraHorno * 1.6);
+                actualizarPantalla();
+            }
+        }
+
+        // Bucle pasivo por segundo
+        setInterval(() => {
+            if (dineroPorSegundo > 0) {
+                let multiplicadorHype = hypeActivo ? 2 : 1;
+                dinero += dineroPorSegundo * multiplicadorHype;
+                actualizarPantalla();
+            }
+
+            // Disminuir hype lentamente si no se hace click
+            if (hype > 0 && !hypeActivo) {
+                hype = Math.max(0, hype - 2);
+                document.getElementById('hypeFill').style.width = hype + '%';
+            } else if (hypeActivo) {
+                document.getElementById('hypeFill').style.width = '100%';
+            }
+        }, 1000);
+
+        // Auto-guardado cada 10 segundos
+        setInterval(() => {
+            guardarPartida(true);
+        }, 10000);
+
+        function actualizarPantalla() {
+            document.getElementById('dineroDisplay').innerText = `$${dinero.toLocaleString()}`;
+            document.getElementById('pasivoDisplay').innerText = `$${dineroPorSegundo * (hypeActivo ? 2 : 1)}/s`;
+
+            let qActual = listaQueques[nivelActualQueque];
+            document.getElementById('nombreQuequeUI').innerText = qActual.nombre;
+            document.getElementById('nivelQuequeUI').innerText = `Nivel ${nivelActualQueque + 1}/100`;
+
+            // Botón siguiente queque
+            if (nivelActualQueque < listaQueques.length - 1) {
+                let siguienteQ = listaQueques[nivelActualQueque + 1];
+                document.getElementById('siguienteNombre').innerText = siguienteQ.nombre;
+                document.getElementById('siguienteCosto').innerText = `Costo: $${siguienteQ.costo.toLocaleString()}`;
+                document.getElementById('descripcionQueque').innerText = siguienteQ.desc;
+                
+                let btnSiguiente = document.getElementById('btnSiguiente');
+                btnSiguiente.disabled = dinero < siguienteQ.costo;
+                btnSiguiente.innerText = "Desbloquear";
+            } else {
+                document.getElementById('siguienteNombre').innerText = "¡Nivel Máximo Alcanzado!";
+                document.getElementById('siguienteCosto').innerText = "¡Eres el rey absoluto de los queques!";
+                document.getElementById('descripcionQueque').innerText = "La cima del universo pastelero.";
+                document.getElementById('btnSiguiente').disabled = true;
+                document.getElementById('btnSiguiente').innerText = "COMPLETO";
+            }
+
+            // Mejoras
+            document.getElementById('costoMejoraClick').innerText = `Costo: $${costoMejoraClick.toLocaleString()}`;
+            document.getElementById('btnMejoraClick').disabled = dinero < costoMejoraClick;
+
+            document.getElementById('costoMejoraHorno').innerText = `Costo: $${costoMejoraHorno.toLocaleString()}`;
+            document.getElementById('btnMejoraHorno').disabled = dinero < costoMejoraHorno;
+
+            if (!hypeActivo) {
+                document.getElementById('hypeFill').style.width = hype + '%';
+            }
+        }
+
+        function agregarMensajeChat(usuario, texto) {
+            let chatBox = document.getElementById('chatBox');
+            let div = document.createElement('div');
+            div.className = 'chat-msg';
+            div.innerHTML = `<span>${usuario}:</span> ${texto}`;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Sistema de Guardado Local y Exportación
+        function guardarPartida(silencioso = false) {
+            const estado = {
+                dinero,
+                nivelActualQueque,
+                dineroPorClick,
+                dineroPorSegundo,
+                costoMejoraClick,
+                costoMejoraHorno
+            };
+            localStorage.setItem('laCobraQuequesSave', JSON.stringify(estado));
+            if (!silencioso) mostrarToast("¡Partida guardada correctamente!");
+        }
+
+        function cargarPartida() {
+            const guardado = localStorage.getItem('laCobraQuequesSave');
+            if (guardado) {
+                try {
+                    const estado = JSON.parse(guardado);
+                    dinero = estado.dinero || 0;
+                    nivelActualQueque = estado.nivelActualQueque || 0;
+                    dineroPorClick = estado.dineroPorClick || 1;
+                    dineroPorSegundo = estado.dineroPorSegundo || 0;
+                    costoMejoraClick = estado.costoMejoraClick || 15;
+                    costoMejoraHorno = estado.costoMejoraHorno || 100;
+                    actualizarPantalla();
+                } catch (e) {
+                    console.error("Error al cargar partida");
+                }
+            }
+        }
+
+        function exportarPartida() {
+            const estado = {
+                dinero,
+                nivelActualQueque,
+                dineroPorClick,
+                dineroPorSegundo,
+                costoMejoraClick,
+                costoMejoraHorno
+            };
+            const codigo = btoa(JSON.stringify(estado));
+            prompt("Copia este código de respaldo para tu partida:", codigo);
+        }
+
+        function importarPartida() {
+            const codigo = prompt("Pega aquí tu código de respaldo:");
+            if (codigo) {
+                try {
+                    const estado = JSON.parse(atob(codigo));
+                    dinero = estado.dinero;
+                    nivelActualQueque = estado.nivelActualQueque;
+                    dineroPorClick = estado.dineroPorClick;
+                    dineroPorSegundo = estado.dineroPorSegundo;
+                    costoMejoraClick = estado.costoMejoraClick;
+                    costoMejoraHorno = estado.costoMejoraHorno;
+                    guardarPartida(true);
+                    actualizarPantalla();
+                    mostrarToast("¡Partida importada con éxito!");
+                } catch (e) {
+                    alert("Código inválido.");
+                }
+            }
+        }
+
+        function reiniciarPartida() {
+            if (confirm("¿Estás seguro de reiniciar todo tu imperio de queques?")) {
+                localStorage.removeItem('laCobraQuequesSave');
+                location.reload();
+            }
+        }
+
+        function mostrarToast(mensaje) {
+            const toast = document.getElementById('toastNotif');
+            toast.innerText = mensaje;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // Cargar al iniciar
+        cargarPartida();
+        actualizarPantalla();
+    </script>
+</body>
+</html>
